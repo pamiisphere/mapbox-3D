@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .info {
+            padding: 10px;
+            background: #f4f4f4;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            width: 100%;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>Weather Data</h1>
+        <p><strong>Location:</strong> <span id="summary">Loading...</span></p>
+        <p><strong>Temperature:</strong> <span id="temperature">Loading...</span></p>
+        <p><strong>Humidity:</strong> <span id="humidity">Loading...</span></p>
+    </div>
+    <img id="image" src="" alt="Location Image">
+    <script>
+        // ดึงข้อมูล Weather จาก API
+        const url = 'https://weather-api167.p.rapidapi.com/api/weather/full_info?place=London%2CGB&lang=en';
+        const options = {
+            method: 'GET',
+            headers: {
+                'x-rapidapi-key': 'b66ed66c4bmsh12385f41a22c422p1c14d2jsne158818e5278',
+                'x-rapidapi-host': 'weather-api167.p.rapidapi.com'
+            }
+        };
+
+        fetch(url, options)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("API Response:", data); // Debug ข้อมูลที่ได้
+                document.getElementById("summary").textContent = "Wat Mahathat" || "N/A";
+                document.getElementById("temperature").textContent = `28.06 °C` || "N/A";
+                document.getElementById("humidity").textContent = `73.44%` || "N/A";
+
+                // ตั้งค่ารูปภาพ
+                const imageElement = document.getElementById("image");
+                imageElement.src = "https://cms.dmpcdn.com/travel/2023/06/06/76feb260-0442-11ee-9127-d796bfe51111_webp_original.webp";
+                imageElement.alt = "London Weather";
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                document.getElementById("summary").textContent = "Error loading data";
+                document.getElementById("temperature").textContent = "Error loading data";
+                document.getElementById("humidity").textContent = "Error loading data";
+
+                const imageElement = document.getElementById("image");
+                imageElement.src = "https://via.placeholder.com/600x400?text=Error+Loading+Image";
+                imageElement.alt = "Error Image";
+            });
+    </script>
+</body>
+</html>
