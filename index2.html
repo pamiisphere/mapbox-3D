@@ -3,71 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Data</title>
+    <title>API Data Display</title>
     <style>
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .info {
-            padding: 10px;
-            background: #f4f4f4;
-            border-bottom: 1px solid #ddd;
+            margin: 20px;
             text-align: center;
-            width: 100%;
+        }
+        .content {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 1.5rem;
+        }
+        p {
+            font-size: 1rem;
         }
         img {
             max-width: 100%;
             height: auto;
             margin-top: 20px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="info">
-        <h1>Weather Data</h1>
-        <p><strong>Location:</strong> <span id="summary">Loading...</span></p>
-        <p><strong>Temperature:</strong> <span id="temperature">Loading...</span></p>
-        <p><strong>Humidity:</strong> <span id="humidity">Loading...</span></p>
+    <div class="content">
+        <h1>ข้อมูลสถานี</h1>
+        <p><strong>ชื่อสถานี (ไทย):</strong> <span id="stationNameTH">Loading...</span></p>
+        <p><strong>ชื่อสถานี (อังกฤษ):</strong> <span id="stationNameEN">Loading...</span></p>
+        <p><strong>ระดับน้ำฝั่งซ้าย:</strong> <span id="leftBank">Loading...</span> เมตร</p>
+        <p><strong>ระดับน้ำฝั่งขวา:</strong> <span id="rightBank">Loading...</span> เมตร</p>
+        <p><strong>ระดับพื้นดิน:</strong> <span id="groundLevel">Loading...</span> เมตร</p>
+        <img id="image" src="https://res.cloudinary.com/dr5estypt/image/upload/v1737811944/efault_po5ucp.jpg" alt="Image of Station">
     </div>
-    <img id="image" src="" alt="Location Image">
     <script>
-        // ดึงข้อมูล Weather จาก API
-        const url = 'https://weather-api167.p.rapidapi.com/api/weather/full_info?place=London%2CGB&lang=en';
-        const options = {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': 'b66ed66c4bmsh12385f41a22c422p1c14d2jsne158818e5278',
-                'x-rapidapi-host': 'weather-api167.p.rapidapi.com'
-            }
+        // ตัวอย่างข้อมูล JSON API
+        const apiData = {
+            "agency_id": 9,
+            "ground_level": -0.33,
+            "id": 1,
+            "is_warning": "N",
+            "left_bank": 2.2,
+            "right_bank": 2.2,
+            "tele_station_lat": "13.854050",
+            "tele_station_long": "100.587460",
+            "tele_station_name": {
+                "en": "Klong Ladprao Bang Bua Temple",
+                "th": "คลองลาดพร้าว วัดบางบัว"
+            },
+            "tele_station_offset": null,
+            "tele_station_oldcode": "BKK021",
+            "tele_station_type": "A"
         };
 
-        fetch(url, options)
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("API Response:", data); // Debug ข้อมูลที่ได้
-                document.getElementById("summary").textContent = "Wat Mahathat" || "N/A";
-                document.getElementById("temperature").textContent = `28.06 °C` || "N/A";
-                document.getElementById("humidity").textContent = `73.44%` || "N/A";
-
-                // ตั้งค่ารูปภาพ
-                const imageElement = document.getElementById("image");
-                imageElement.src = "https://cms.dmpcdn.com/travel/2023/06/06/76feb260-0442-11ee-9127-d796bfe51111_webp_original.webp";
-                imageElement.alt = "London Weather";
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-                document.getElementById("summary").textContent = "Error loading data";
-                document.getElementById("temperature").textContent = "Error loading data";
-                document.getElementById("humidity").textContent = "Error loading data";
-
-                const imageElement = document.getElementById("image");
-                imageElement.src = "https://via.placeholder.com/600x400?text=Error+Loading+Image";
-                imageElement.alt = "Error Image";
-            });
+        // แสดงข้อมูลใน HTML
+        document.getElementById("stationNameTH").textContent = apiData.tele_station_name.th || "No Data";
+        document.getElementById("stationNameEN").textContent = apiData.tele_station_name.en || "No Data";
+        document.getElementById("leftBank").textContent = apiData.left_bank || "No Data";
+        document.getElementById("rightBank").textContent = apiData.right_bank || "No Data";
+        document.getElementById("groundLevel").textContent = apiData.ground_level || "No Data";
     </script>
 </body>
 </html>
