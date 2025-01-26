@@ -225,6 +225,17 @@
                                 <p>Touch for more information!</p>
                             `)
                             .addTo(map);
+                        try{
+                            // เปิดแท็บใหม่และส่งข้อมูลผ่าน URL
+                            const newTabUrl = `index2.html?station_name=${encodeURIComponent(stationName)}&rainfall=${encodeURIComponent(rainfall)}`;
+                            window.open(newTabUrl, '_blank');
+                        } catch (error) {
+                            console.error('Error fetching Thaiwater API:', error);
+
+                            // กรณีเกิดข้อผิดพลาด ส่งข้อความ Error ไปยังแท็บใหม่
+                            const newTabUrl = `index2.html?station_name=Error&rainfall=Error`;
+                            window.open(newTabUrl, '_blank');
+                        }
 
                         setTimeout(() => popup.remove(), 2000); // ลบ popup อัตโนมัติหลัง 2 วินาที
                     });
