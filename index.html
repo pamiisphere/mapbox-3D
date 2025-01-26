@@ -211,39 +211,48 @@
                 }
             });
 
-                // สำหรับอุปกรณ์ที่รองรับ touch (มือถือ)
-                if ('ontouchstart' in window) {
-                    marker.getElement().addEventListener("touchstart", () => {
-                        const stationNameTH = "คลองลาดพร้าว วัดบางบัว";
-                        const stationNameEN = "Klong Ladprao Bang Bua Temple";
+            // สำหรับอุปกรณ์ที่รองรับ touch (มือถือ)
+            if ('ontouchstart' in window) {
+                marker.getElement().addEventListener("touchstart", async () => {
+                    const stationNameTH = "คลองลาดพร้าว วัดบางบัว";
+                    const stationNameEN = "Klong Ladprao Bang Bua Temple";
 
-                        const popup = new mapboxgl.Popup({ closeButton: false })
-                            .setLngLat([100.587460, 13.854050])
-                            .setHTML(`
-                                <strong>${stationNameTH}</strong><br>
-                                <em>${stationNameEN}</em><br>
-                                <p>Touch for more information!</p>
-                            `)
-                            .addTo(map);
-                        try{
-                            // เปิดแท็บใหม่และส่งข้อมูลผ่าน URL
-                            const newTabUrl = `index2.html?station_name=${encodeURIComponent(stationName)}&rainfall=${encodeURIComponent(rainfall)}`;
-                            window.open(newTabUrl, '_blank');
-                        } catch (error) {
-                            console.error('Error fetching Thaiwater API:', error);
+                    // สร้าง Pop-up แสดงข้อมูลเบื้องต้น
+                    const popup = new mapboxgl.Popup({ closeButton: false })
+                        .setLngLat([100.587460, 13.854050])
+                        .setHTML(`
+                            <strong>${stationNameTH}</strong><br>
+                            <em>${stationNameEN}</em><br>
+                            <p>Touch for more information!</p>
+                        `)
+                        .addTo(map);
 
-                            // กรณีเกิดข้อผิดพลาด ส่งข้อความ Error ไปยังแท็บใหม่
-                            const newTabUrl = `index2.html?station_name=Error&rainfall=Error`;
-                            window.open(newTabUrl, '_blank');
-                        }
+                    setTimeout(() => popup.remove(), 2000); // ลบ popup อัตโนมัติหลัง 2 วินาที
 
-                        setTimeout(() => popup.remove(), 2000); // ลบ popup อัตโนมัติหลัง 2 วินาที
-                    });
-                }
+                    try {
+                        // ดึงข้อมูลจาก API
+                        const apiUrl = 'https://api-v3.thaiwater.net/api/v1/thaiwater30/api_service?mid=105&eid=CM54nw9Jts6piDUgwVJME5_0-uk0EJbI50ygxq3CQ95fuFWsNzCiGn6kpUHasd7XBUDYysU-ZVJpiIpDr9iqjg';
+                        const response = await fetch(apiUrl);
+                        const data = await response.json();
+
+                        const stationName = data.tele_station_name?.th || 'Unknown Station';
+                        const rainfall = data.rainfall || 'No data';
+
+                        // เปิดแท็บใหม่พร้อมส่งข้อมูลผ่าน URL
+                        const newTabUrl = `index2.html?station_name=${encodeURIComponent(stationName)}&rainfall=${encodeURIComponent(rainfall)}`;
+                        window.open(newTabUrl, '_blank');
+                    } catch (error) {
+                        console.error('Error fetching Thaiwater API:', error);
+
+                        // กรณีเกิดข้อผิดพลาด ส่งข้อความ Error ไปยังแท็บใหม่
+                        const newTabUrl = `index2.html?station_name=Error&rainfall=Error`;
+                        window.open(newTabUrl, '_blank');
+                    }
+                });
+            }
 
             });
     </script>
     
 </body>
 </html>
-
