@@ -211,6 +211,25 @@
                 }
             });
 
+                // สำหรับอุปกรณ์ที่รองรับ touch (มือถือ)
+                if ('ontouchstart' in window) {
+                    marker.getElement().addEventListener("touchstart", () => {
+                        const stationNameTH = "คลองลาดพร้าว วัดบางบัว";
+                        const stationNameEN = "Klong Ladprao Bang Bua Temple";
+
+                        const popup = new mapboxgl.Popup({ closeButton: false })
+                            .setLngLat([100.587460, 13.854050])
+                            .setHTML(`
+                                <strong>${stationNameTH}</strong><br>
+                                <em>${stationNameEN}</em><br>
+                                <p>Touch for more information!</p>
+                            `)
+                            .addTo(map);
+
+                        setTimeout(() => popup.remove(), 2000); // ลบ popup อัตโนมัติหลัง 2 วินาที
+                    });
+                }
+
             });
     </script>
     
